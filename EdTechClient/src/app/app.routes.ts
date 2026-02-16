@@ -1,0 +1,33 @@
+import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
+import { TutorsComponent } from './pages/tutors/tutors.component';
+import { TutorDetailComponent } from './pages/tutor-detail/tutor-detail.component';
+import { CoursesComponent } from './pages/courses/courses.component';
+import { CourseDetailComponent } from './pages/course-detail/course-detail.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { BookingComponent } from './pages/booking/booking.component';
+import { PaymentComponent } from './pages/payment/payment.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { SessionHistoryComponent } from './pages/session-history/session-history.component';
+import { ChatComponent } from './pages/chat/chat.component';
+
+export const routes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'tutors', component: TutorsComponent },
+  { path: 'tutors/:id', component: TutorDetailComponent },
+  { path: 'courses', component: CoursesComponent },
+  { path: 'courses/:id', component: CourseDetailComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'booking', component: BookingComponent },
+  { path: 'booking/:tutorId', component: BookingComponent },
+  { path: 'payment', component: PaymentComponent },
+  { path: 'payment/:bookingId', component: PaymentComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'profile', component: ProfileComponent },
+  { path: 'sessions', component: SessionHistoryComponent },
+  { path: 'messages', component: ChatComponent },
+  { path: '**', redirectTo: '' }
+];
