@@ -1,0 +1,6 @@
+@EdTechAPIs_HostAddress = http://localhost:5237
+
+GET {{EdTechAPIs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
