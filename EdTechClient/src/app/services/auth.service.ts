@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Student, Tutor } from '../models';
 
@@ -6,6 +7,7 @@ import { Student, Tutor } from '../models';
   providedIn: 'root'
 })
 export class AuthService {
+  private apiUrl = 'http://localhost:5237/api/auth';
   private currentUserSubject = new BehaviorSubject<Student | Tutor | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -15,7 +17,7 @@ export class AuthService {
   private userTypeSubject = new BehaviorSubject<'student' | 'tutor' | null>(null);
   public userType$ = this.userTypeSubject.asObservable();
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.loadUserFromStorage();
   }
 
@@ -30,45 +32,48 @@ export class AuthService {
   }
 
   login(email: string, password: string, userType: 'student' | 'tutor'): Observable<any> {
-    // Mock login - will be replaced with actual API call
     return new Observable(observer => {
-      setTimeout(() => {
-        const mockUser: any = {
-          id: '123',
-          name: 'John Doe',
-          email: email,
-          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + email,
-          [userType === 'student' ? 'grade' : 'bio']: userType === 'student' ? '10th' : 'Professional Tutor',
-          [userType === 'student' ? 'subjects' : 'specializations']: ['Math', 'English', 'Science']
-        };
-        this.currentUserSubject.next(mockUser);
-        this.userTypeSubject.next(userType);
-        this.isLoggedInSubject.next(true);
-        localStorage.setItem('currentUser', JSON.stringify(mockUser));
-        localStorage.setItem('userType', userType);
-        observer.next({ success: true, user: mockUser });
-        observer.complete();
-      }, 1000);
+      this.http.post<any>(`${this.apiUrl}/login`, { email, password, userType })
+        .subscribe({
+          next: (response) => {
+            if (response.success) {
+              this.currentUserSubject.next(response.user);
+              this.userTypeSubject.next(userType);
+              this.isLoggedInSubject.next(true);
+              localStorage.setItem('currentUser', JSON.stringify(response.user));
+              localStorage.setItem('userType', userType);
+              observer.next({ success: true, user: response.user });
+            }
+            observer.complete();
+          },
+          error: (error) => {
+            observer.error(error);
+          }
+        });
     });
   }
 
   register(userData: any, userType: 'student' | 'tutor'): Observable<any> {
-    // Mock register - will be replaced with actual API call
     return new Observable(observer => {
-      setTimeout(() => {
-        const mockUser = {
-          id: Math.random().toString(36).substr(2, 9),
-          ...userData,
-          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + userData.email
-        };
-        this.currentUserSubject.next(mockUser);
-        this.userTypeSubject.next(userType);
-        this.isLoggedInSubject.next(true);
-        localStorage.setItem('currentUser', JSON.stringify(mockUser));
-        localStorage.setItem('userType', userType);
-        observer.next({ success: true, user: mockUser });
-        observer.complete();
-      }, 1000);
+      this.http.post<any>(`${this.apiUrl}/register`, { 
+        ...userData,
+        userType
+      }).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.currentUserSubject.next(response.user);
+            this.userTypeSubject.next(userType);
+            this.isLoggedInSubject.next(true);
+            localStorage.setItem('currentUser', JSON.stringify(response.user));
+            localStorage.setItem('userType', userType);
+            observer.next({ success: true, user: response.user });
+          }
+          observer.complete();
+        },
+        error: (error) => {
+          observer.error(error);
+        }
+      });
     });
   }
 
