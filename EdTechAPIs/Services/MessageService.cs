@@ -14,15 +14,15 @@ public class MessageService : IMessageService
 {
     private List<Message> _messages = new();
 
-    public Task<Message> SendMessage(Message message)
+    public async Task<Message> SendMessage(Message message)
     {
         _messages.Add(message);
-        return Task.FromResult(message);
+        return await Task.FromResult(message);
     }
 
-    public Task<List<Message>> GetConversation(string userId1, string userId2)
+    public async Task<List<Message>> GetConversation(string userId1, string userId2)
     {
-        return Task.FromResult(_messages
+        return await Task.FromResult(_messages
             .Where(m =>
                 (m.SenderId == userId1 && m.ReceiverId == userId2) ||
                 (m.SenderId == userId2 && m.ReceiverId == userId1)
@@ -31,20 +31,20 @@ public class MessageService : IMessageService
             .ToList());
     }
 
-    public Task<List<Message>> GetUserMessages(string userId)
+    public async Task<List<Message>> GetUserMessages(string userId)
     {
-        return Task.FromResult(_messages
+        return await Task.FromResult(_messages
             .Where(m => m.SenderId == userId || m.ReceiverId == userId)
             .OrderByDescending(m => m.Timestamp)
             .ToList());
     }
 
-    public Task<bool> MarkAsRead(string messageId)
+    public async Task<bool> MarkAsRead(string messageId)
     {
         var message = _messages.FirstOrDefault(m => m.Id == messageId);
-        if (message == null) return Task.FromResult(false);
+        if (message == null) return await Task.FromResult(false);
 
         message.Read = true;
-        return Task.FromResult(true);
+        return await Task.FromResult(true);
     }
 }
