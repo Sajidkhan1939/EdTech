@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var existingUser = _authService.GetUserByEmail(request.Email);
+        var existingUser = await _authService.GetUserByEmail(request.Email);
         if (existingUser != null)
             return Conflict(new { message = "Email already exists" });
 

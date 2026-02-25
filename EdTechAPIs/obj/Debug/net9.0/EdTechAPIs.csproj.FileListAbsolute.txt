@@ -31,3 +31,4 @@ C:\EdTech\EdTechAPIs\obj\Debug\net9.0\refint\EdTechAPIs.dll
 C:\EdTech\EdTechAPIs\obj\Debug\net9.0\EdTechAPIs.pdb
 C:\EdTech\EdTechAPIs\obj\Debug\net9.0\EdTechAPIs.genruntimeconfig.cache
 C:\EdTech\EdTechAPIs\obj\Debug\net9.0\ref\EdTechAPIs.dll
+C:\EdTech\EdTechAPIs\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt

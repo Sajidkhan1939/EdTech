@@ -95,27 +95,27 @@ public class TutorService : ITutorService
         });
     }
 
-    public Task<List<Tutor>> GetAllTutors()
+    public async Task<List<Tutor>> GetAllTutors()
     {
-        return Task.FromResult(_tutors.OrderByDescending(t => t.Rating).ToList());
+        return await Task.FromResult(_tutors.OrderByDescending(t => t.Rating).ToList());
     }
 
-    public Task<Tutor> GetTutorById(string id)
+    public async Task<Tutor> GetTutorById(string id)
     {
-        return Task.FromResult(_tutors.FirstOrDefault(t => t.Id == id));
+        return await Task.FromResult(_tutors.FirstOrDefault(t => t.Id == id));
     }
 
-    public Task<List<Tutor>> SearchTutors(string searchTerm)
+    public async Task<List<Tutor>> SearchTutors(string searchTerm)
     {
         var results = _tutors.Where(t =>
             t.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
             t.Specializations.Any(s => s.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
         ).ToList();
 
-        return Task.FromResult(results);
+        return await Task.FromResult(results);
     }
 
-    public Task<List<Tutor>> FilterTutors(string specialization, double minRating, double maxRate)
+    public async Task<List<Tutor>> FilterTutors(string specialization, double minRating, double maxRate)
     {
         var results = _tutors.Where(t =>
             (string.IsNullOrEmpty(specialization) || t.Specializations.Contains(specialization)) &&
@@ -123,13 +123,13 @@ public class TutorService : ITutorService
             t.HourlyRate <= maxRate
         ).OrderByDescending(t => t.Rating).ToList();
 
-        return Task.FromResult(results);
+        return await Task.FromResult(results);
     }
 
-    public Task<bool> UpdateTutorAvailability(string tutorId, Availability availability)
+    public async Task<bool> UpdateTutorAvailability(string tutorId, Availability availability)
     {
         var tutor = _tutors.FirstOrDefault(t => t.Id == tutorId);
-        if (tutor == null) return Task.FromResult(false);
+        if (tutor == null) return await Task.FromResult(false);
 
         var existingAvailability = tutor.Availability.FirstOrDefault(a => a.DayOfWeek == availability.DayOfWeek);
         if (existingAvailability != null)
@@ -138,15 +138,15 @@ public class TutorService : ITutorService
         }
 
         tutor.Availability.Add(availability);
-        return Task.FromResult(true);
+        return await Task.FromResult(true);
     }
 
-    public Task<List<Review>> GetTutorReviews(string tutorId)
+    public async Task<List<Review>> GetTutorReviews(string tutorId)
     {
-        return Task.FromResult(_reviews.Where(r => r.TutorId == tutorId).OrderByDescending(r => r.Date).ToList());
+        return await Task.FromResult(_reviews.Where(r => r.TutorId == tutorId).OrderByDescending(r => r.Date).ToList());
     }
 
-    public Task<Review> AddReview(string tutorId, string studentId, int rating, string comment)
+    public async Task<Review> AddReview(string tutorId, string studentId, int rating, string comment)
     {
         var review = new Review
         {
@@ -157,6 +157,6 @@ public class TutorService : ITutorService
             Verified = true
         };
         _reviews.Add(review);
-        return Task.FromResult(review);
+        return await Task.FromResult(review);
     }
 }
