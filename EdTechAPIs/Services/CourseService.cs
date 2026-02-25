@@ -70,22 +70,22 @@ public class CourseService : ICourseService
         });
     }
 
-    public Task<List<Course>> GetAllCourses()
+    public async Task<List<Course>> GetAllCourses()
     {
-        return Task.FromResult(_courses.OrderByDescending(c => c.Rating).ToList());
+        return await Task.FromResult(_courses.OrderByDescending(c => c.Rating).ToList());
     }
 
-    public Task<Course> GetCourseById(string id)
+    public async Task<Course> GetCourseById(string id)
     {
-        return Task.FromResult(_courses.FirstOrDefault(c => c.Id == id));
+        return await Task.FromResult(_courses.FirstOrDefault(c => c.Id == id));
     }
 
-    public Task<List<Course>> GetCoursesByTutor(string tutorId)
+    public async Task<List<Course>> GetCoursesByTutor(string tutorId)
     {
-        return Task.FromResult(_courses.Where(c => c.TutorId == tutorId).ToList());
+        return await Task.FromResult(_courses.Where(c => c.TutorId == tutorId).ToList());
     }
 
-    public Task<Course> CreateCourse(string tutorId, string title, string description, string category, string level, double price, int duration, string image)
+    public async Task<Course> CreateCourse(string tutorId, string title, string description, string category, string level, double price, int duration, string image)
     {
         var course = new Course
         {
@@ -101,13 +101,13 @@ public class CourseService : ICourseService
             StudentCount = 0
         };
         _courses.Add(course);
-        return Task.FromResult(course);
+        return await Task.FromResult(course);
     }
 
-    public Task<Course> UpdateCourse(string id, Course course)
+    public async Task<Course> UpdateCourse(string id, Course course)
     {
         var existingCourse = _courses.FirstOrDefault(c => c.Id == id);
-        if (existingCourse == null) return Task.FromResult<Course>(null);
+        if (existingCourse == null) return await Task.FromResult<Course>(null);
 
         existingCourse.Title = course.Title;
         existingCourse.Description = course.Description;
@@ -117,19 +117,19 @@ public class CourseService : ICourseService
         existingCourse.Duration = course.Duration;
         existingCourse.Image = course.Image;
 
-        return Task.FromResult(existingCourse);
+        return await Task.FromResult(existingCourse);
     }
 
-    public Task<bool> DeleteCourse(string id)
+    public async Task<bool> DeleteCourse(string id)
     {
         var course = _courses.FirstOrDefault(c => c.Id == id);
-        if (course == null) return Task.FromResult(false);
+        if (course == null) return await Task.FromResult(false);
 
         _courses.Remove(course);
-        return Task.FromResult(true);
+        return await Task.FromResult(true);
     }
 
-    public Task<List<Course>> SearchCourses(string searchTerm)
+    public async Task<List<Course>> SearchCourses(string searchTerm)
     {
         var results = _courses.Where(c =>
             c.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
@@ -137,6 +137,6 @@ public class CourseService : ICourseService
             c.Category.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
         ).ToList();
 
-        return Task.FromResult(results);
+        return await Task.FromResult(results);
     }
 }

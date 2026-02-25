@@ -9,7 +9,7 @@ public interface IAuthService
     Task<User> Login(string email, string password);
     Task<Student> GetStudent(string id);
     Task<Tutor> GetTutor(string id);
-    User GetUserByEmail(string email);
+    Task<User> GetUserByEmail(string email);
 }
 
 public class AuthService : IAuthService
@@ -79,7 +79,7 @@ public class AuthService : IAuthService
         });
     }
 
-    public Task<Student> RegisterStudent(string name, string email, string password)
+    public async Task<Student> RegisterStudent(string name, string email, string password)
     {
         var student = new Student
         {
@@ -91,10 +91,10 @@ public class AuthService : IAuthService
             Subjects = new List<string> { "Math", "English", "Science" }
         };
         _students.Add(student);
-        return Task.FromResult(student);
+        return await Task.FromResult(student);
     }
 
-    public Task<Tutor> RegisterTutor(string name, string email, string password)
+    public async Task<Tutor> RegisterTutor(string name, string email, string password)
     {
         var tutor = new Tutor
         {
@@ -109,35 +109,35 @@ public class AuthService : IAuthService
             YearsExperience = 1
         };
         _tutors.Add(tutor);
-        return Task.FromResult(tutor);
+        return await Task.FromResult(tutor);
     }
 
-    public Task<User> Login(string email, string password)
+    public async Task<User> Login(string email, string password)
     {
         var student = _students.FirstOrDefault(s => s.Email == email && s.Password == password);
         if (student != null)
-            return Task.FromResult<User>(student);
+            return await Task.FromResult<User>(student);
 
         var tutor = _tutors.FirstOrDefault(t => t.Email == email && t.Password == password);
         if (tutor != null)
-            return Task.FromResult<User>(tutor);
+            return await Task.FromResult<User>(tutor);
 
-        return Task.FromResult<User>(null);
+        return await Task.FromResult<User>(null);
     }
 
-    public Task<Student> GetStudent(string id)
+    public async Task<Student> GetStudent(string id)
     {
-        return Task.FromResult(_students.FirstOrDefault(s => s.Id == id));
+        return await Task.FromResult(_students.FirstOrDefault(s => s.Id == id));
     }
 
-    public Task<Tutor> GetTutor(string id)
+    public async Task<Tutor> GetTutor(string id)
     {
-        return Task.FromResult(_tutors.FirstOrDefault(t => t.Id == id));
+        return await Task.FromResult(_tutors.FirstOrDefault(t => t.Id == id));
     }
 
-    public User GetUserByEmail(string email)
+    public async Task<User> GetUserByEmail(string email)
     {
         var user = (User)_students.FirstOrDefault(s => s.Email == email);
-        return user ?? _tutors.FirstOrDefault(t => t.Email == email);
+        return await Task.FromResult<User>(user ?? _tutors.FirstOrDefault(t => t.Email == email));
     }
 }
